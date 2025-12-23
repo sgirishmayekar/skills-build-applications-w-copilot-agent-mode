@@ -11,10 +11,10 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = ['id', 'user_id', 'user_name', 'activity_type', 'duration', 'date']
 
     def get_id(self, obj):
-        # Prefer instance id; fall back to querying the MongoDB document
+        # Prefer instance primary key (pk); fall back to querying the MongoDB document
         try:
-            if getattr(obj, 'id', None):
-                return str(obj.id)
+            if getattr(obj, 'pk', None):
+                return str(obj.pk)
         except Exception:
             pass
         try:
@@ -33,9 +33,15 @@ class ActivitySerializer(serializers.ModelSerializer):
         return None
 
     def get_user_id(self, obj):
+        # Try raw user_id stored on the instance first, then user.pk
         try:
-            if obj.user and getattr(obj.user, 'id', None):
-                return str(obj.user.id)
+            if getattr(obj, 'user_id', None):
+                return str(obj.user_id)
+        except Exception:
+            pass
+        try:
+            if obj.user and getattr(obj.user, 'pk', None):
+                return str(obj.user.pk)
         except Exception:
             pass
         return None
@@ -51,8 +57,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_id(self, obj):
         try:
-            if getattr(obj, 'id', None):
-                return str(obj.id)
+            if getattr(obj, 'pk', None):
+                return str(obj.pk)
         except Exception:
             pass
         try:
@@ -72,8 +78,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_team_id(self, obj):
         try:
-            if obj.team and getattr(obj.team, 'id', None):
-                return str(obj.team.id)
+            if getattr(obj, 'team_id', None):
+                return str(obj.team_id)
+        except Exception:
+            pass
+        try:
+            if obj.team and getattr(obj.team, 'pk', None):
+                return str(obj.team.pk)
         except Exception:
             pass
         try:
@@ -102,8 +113,8 @@ class TeamSerializer(serializers.ModelSerializer):
 
     def get_id(self, obj):
         try:
-            if getattr(obj, 'id', None):
-                return str(obj.id)
+            if getattr(obj, 'pk', None):
+                return str(obj.pk)
         except Exception:
             pass
         try:
@@ -200,7 +211,18 @@ class LeaderboardSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_id', 'user_name', 'score', 'rank']
 
     def get_id(self, obj):
-        return str(obj.id)
+        try:
+            return str(obj.pk)
+        except Exception:
+            return None
 
     def get_user_id(self, obj):
-        return str(obj.user.id) if obj.user else None
+        try:
+            if getattr(obj, 'user_id', None):
+                return str(obj.user_id)
+        except Exception:
+            pass
+        try:
+            return str(obj.user.pk) if obj.user else None
+        except Exception:
+            return None

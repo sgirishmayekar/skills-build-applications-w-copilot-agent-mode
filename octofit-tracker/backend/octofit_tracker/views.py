@@ -7,7 +7,10 @@ from .serializers import (
 
 class ActivityViewSet(viewsets.ReadOnlyModelViewSet):
     """Read-only viewset for activities."""
-    queryset = Activity.objects.select_related('user').all().order_by('-date')
+    # Avoid select_related on `user` because djongo instances may not have
+    # standard SQL-style PKs available at query time; serialize user info
+    # defensively in the serializer instead.
+    queryset = Activity.objects.all().order_by('-date')
     serializer_class = ActivitySerializer
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

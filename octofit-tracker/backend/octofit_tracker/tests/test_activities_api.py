@@ -19,3 +19,10 @@ class ActivitiesAPITest(TestCase):
         self.assertTrue(isinstance(items, list))
         self.assertGreaterEqual(len(items), 1)
         self.assertIn('activity_type', items[0])
+        # Ensure id/user_id/user_name are present and not null
+        self.assertIn('id', items[0])
+        self.assertIsNotNone(items[0].get('id'))
+        self.assertIn('user_id', items[0])
+        self.assertIsNotNone(items[0].get('user_id'))
+        self.assertIn('user_name', items[0])
+        self.assertIsNotNone(items[0].get('user_name'))
