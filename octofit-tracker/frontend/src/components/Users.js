@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { apiUrl } from '../config';
 
 export default function Users() {
@@ -11,7 +11,7 @@ export default function Users() {
   const endpoint = 'users';
   const url = apiUrl(endpoint);
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     setLoading(true);
     setError(null);
     console.log('[Users] Fetching from', url);
@@ -27,11 +27,11 @@ export default function Users() {
         setError(err?.message ?? String(err));
       })
       .finally(() => setLoading(false));
-  };
+  }, [url]);
 
   useEffect(() => {
     fetchData();
-  }, [url]);
+  }, [fetchData]);
 
   return (
     <div className="container container-main mt-4">

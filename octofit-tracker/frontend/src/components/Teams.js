@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { apiUrl } from '../config';
 
 export default function Teams() {
@@ -11,7 +11,7 @@ export default function Teams() {
   const endpoint = 'teams';
   const url = apiUrl(endpoint);
 
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     setLoading(true);
     setError(null);
     console.log('[Teams] Fetching from', url);
@@ -27,11 +27,11 @@ export default function Teams() {
         setError(err?.message ?? String(err));
       })
       .finally(() => setLoading(false));
-  };
+  }, [url]);
 
   useEffect(() => {
     fetchData();
-  }, [url]);
+  }, [fetchData]);
 
   return (
     <div className="container container-main mt-4">
