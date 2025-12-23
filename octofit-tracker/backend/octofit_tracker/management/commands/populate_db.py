@@ -7,17 +7,40 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write('Deleting existing data...')
-        Leaderboard.objects.all().delete()
-        Activity.objects.all().delete()
-        Workout.objects.all().delete()
-        User.objects.all().delete()
-        Team.objects.all().delete()
+        # Attempt standard deletions; if that fails (e.g., inconsistent ObjectIds),
+        # fall back to dropping MongoDB collections directly to ensure a clean state.
+        try:
+            Leaderboard.objects.all().delete()
+            Activity.objects.all().delete()
+            Workout.objects.all().delete()
+            User.objects.all().delete()
+            Team.objects.all().delete()
+        except Exception as e:
+            self.stdout.write(f'Warning: standard delete failed: {e}. Falling back to dropping collections via pymongo.')
+            try:
+                import pymongo
+                from django.conf import settings
+                db_name = settings.DATABASES['default'].get('NAME', 'octofit_db')
+                host = settings.DATABASES['default'].get('CLIENT', {}).get('host', 'localhost')
+                port = settings.DATABASES['default'].get('CLIENT', {}).get('port', 27017)
+                client = pymongo.MongoClient(host=host, port=port)
+                db = client[db_name]
+                for coll in ['leaderboard', 'activities', 'workouts', 'users', 'teams']:
+                    try:
+                        db.drop_collection(coll)
+                        self.stdout.write(f'Dropped collection: {coll}')
+                    except Exception as e2:
+                        self.stdout.write(f'Failed to drop collection {coll}: {e2}')
+            except Exception as e3:
+                self.stdout.write(f'Failed to fallback drop collections: {e3}')
 
         self.stdout.write('Creating teams...')
+        # Let djongo create ObjectId primary keys automatically
         marvel = Team.objects.create(name='Marvel', description='Marvel heroes')
         dc = Team.objects.create(name='DC', description='DC heroes')
 
         self.stdout.write('Creating users...')
+        # Create users linked to teams; primary keys will be ObjectIds
         tony = User.objects.create(name='Tony Stark', email='tony@stark.com', team=marvel)
         steve = User.objects.create(name='Steve Rogers', email='steve@rogers.com', team=marvel)
         bruce = User.objects.create(name='Bruce Wayne', email='bruce@wayne.com', team=dc)
@@ -32,9 +55,18 @@ class Command(BaseCommand):
 
         self.stdout.write('Creating workouts...')
         w1 = Workout.objects.create(name='HIIT Blast', description='High intensity interval training')
-        w1.suggested_for.add(tony, steve)
+        try:
+            w1.suggested_for.add(tony)
+            w1.suggested_for.add(steve)
+        except Exception as e:
+            self.stdout.write(f'Warning: could not add suggested_for for HIIT Blast: {e}')
+
         w2 = Workout.objects.create(name='Calm Stretch', description='Stretching and mobility')
-        w2.suggested_for.add(bruce, clark)
+        try:
+            w2.suggested_for.add(bruce)
+            w2.suggested_for.add(clark)
+        except Exception as e:
+            self.stdout.write(f'Warning: could not add suggested_for for Calm Stretch: {e}')
 
         self.stdout.write('Creating leaderboard entries...')
         Leaderboard.objects.create(user=tony, score=1000, rank=1)
