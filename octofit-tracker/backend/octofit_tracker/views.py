@@ -17,12 +17,16 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """Read-only viewset for teams."""
-    queryset = Team.objects.prefetch_related('members').all().order_by('name')
+    # Avoid prefetching related managers when ObjectId PKs can be unset on
+    # model instances returned by djongo; counts are computed in the serializer.
+    queryset = Team.objects.all().order_by('name')
     serializer_class = TeamSerializer
 
 class WorkoutViewSet(viewsets.ReadOnlyModelViewSet):
     """Read-only viewset for workouts."""
-    queryset = Workout.objects.prefetch_related('suggested_for').all().order_by('name')
+    # Avoid prefetching M2M relations that may access a missing PK; serializer
+    # handles suggested_for counts defensively instead.
+    queryset = Workout.objects.all().order_by('name')
     serializer_class = WorkoutSerializer
 
 class LeaderboardViewSet(viewsets.ReadOnlyModelViewSet):
