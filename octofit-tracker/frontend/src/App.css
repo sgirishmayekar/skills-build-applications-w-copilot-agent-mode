@@ -1,0 +1,144 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* App-level tweaks for OctoFit */
+:root{
+  --octo-bg-1: #e6f7ff;
+  --octo-bg-2: #f0f8ff;
+  --octo-primary: #0077b6;
+  --octo-accent: #00b4d8;
+  --octo-dark: #0b2447;
+  --octo-text: #073b4c;
+  --octo-muted: #5f6b73;
+  --table-odd: #f7fbff;
+  --btn-primary-bg: #0077b6;
+  --link-color: #005b96;
+  --heading-color: #002b4f;
+}
+
+body {
+  background: linear-gradient(180deg, var(--octo-bg-1) 0%, var(--octo-bg-2) 100%);
+  color: var(--octo-text);
+}
+
+.navbar {
+  box-shadow: 0 2px 8px rgba(11,36,71,0.12);
+}
+
+.octo-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-weight: 600;
+  color: #fff;
+}
+
+.navbar .nav-link {
+  color: rgba(255,255,255,0.9);
+}
+.navbar .nav-link.active {
+  color: #ffe9b5;
+  background: rgba(255,255,255,0.05);
+  border-radius: 0.25rem;
+}
+
+.container-main {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.card-fixed {
+  min-height: 200px;
+}
+
+.table-fixed {
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.table thead th {
+  background: linear-gradient(90deg, rgba(0,123,255,0.05), rgba(0,123,255,0.02));
+  color: var(--heading-color);
+}
+
+.table tbody tr:nth-of-type(odd) {
+  background: var(--table-odd);
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
+}
+
+.btn-outline-primary {
+  color: var(--octo-primary);
+  border-color: rgba(0,119,182,0.2);
+}
+
+h1,h2,h3,h4,h5 {
+  color: var(--heading-color);
+}
+
+a {
+  color: var(--link-color);
+}
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1040;
+}
+
+.modal-custom {
+  z-index: 1050;
+  display: block;
+}
+
+.code-block {
+  background: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  overflow: auto;
+  max-height: 240px;
+}
