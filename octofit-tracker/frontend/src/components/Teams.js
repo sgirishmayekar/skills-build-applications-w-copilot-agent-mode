@@ -63,9 +63,9 @@ export default function Teams() {
               <tbody>
                 {items.map((it, idx) => (
                   <tr key={it.id ?? idx}>
-                    <td>{it.id ?? '-'}</td>
+                    <td>{it.id && it.id !== 'None' ? it.id : '-'}</td>
                     <td>{it.name ?? '—'}</td>
-                    <td><small className="text-muted">{it.members ? `${it.members.length} members` : JSON.stringify(it).slice(0, 100)}</small></td>
+                    <td><small className="text-muted">{it.members_count ? `${it.members_count} members` : (it.members ? `${it.members.length} members` : JSON.stringify(it).slice(0, 100))}</small></td>
                     <td>
                       <button className="btn btn-sm btn-primary me-2" onClick={() => { setSelected(it); setShowModal(true); }}>View</button>
                     </td>

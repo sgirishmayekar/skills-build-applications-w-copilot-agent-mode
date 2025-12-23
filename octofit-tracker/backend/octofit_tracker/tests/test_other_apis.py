@@ -39,3 +39,8 @@ class OtherAPIsTest(TestCase):
         data = res.json()
         items = data if isinstance(data, list) else data.get('results', [])
         self.assertTrue(isinstance(items, list))
+        if items:
+            # id should be a real value (not the string 'None') and user_name should be present
+            self.assertIsNotNone(items[0].get('id'))
+            self.assertNotEqual(items[0].get('id'), 'None')
+            self.assertIsNotNone(items[0].get('user_name'))

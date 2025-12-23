@@ -63,9 +63,9 @@ export default function Leaderboard() {
               <tbody>
                 {items.map((it, idx) => (
                   <tr key={it.id ?? idx}>
-                    <td>{it.id ?? '-'}</td>
-                    <td>{it.username ?? it.name ?? '—'}</td>
-                    <td><small className="text-muted">{it.score ?? it.points ?? JSON.stringify(it).slice(0, 100)}</small></td>
+                    <td>{it.id && it.id !== 'None' ? it.id : '-'}</td>
+                    <td>{it.user_name ?? it.name ?? '—'}</td>
+                    <td><small className="text-muted">{`Score: ${it.score ?? it.points ?? ''}${it.rank ? ` • Rank ${it.rank}` : ''}`}</small></td>
                     <td>
                       <button className="btn btn-sm btn-primary me-2" onClick={() => { setSelected(it); setShowModal(true); }}>View</button>
                     </td>

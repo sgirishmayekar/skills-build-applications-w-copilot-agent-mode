@@ -65,10 +65,10 @@ export default function Activities() {
               <tbody>
                 {items.map((it, idx) => (
                   <tr key={it.id ?? idx}>
-                    <td>{it.id ?? '-'}</td>
-                    <td>{it.name ?? it.title ?? '—'}</td>
+                    <td>{it.id && it.id !== 'None' ? it.id : '-'}</td>
+                    <td>{it.user_name ?? it.user_id ?? it.name ?? '—'}</td>
                     <td style={{maxWidth: 420}}>
-                      <small className="text-muted">{it.description ?? JSON.stringify(it).slice(0, 140)}</small>
+                      <small className="text-muted">{it.activity_type ? `${it.activity_type} — ${it.duration ?? ''} min • ${it.date ?? ''}` : (it.description ?? JSON.stringify(it).slice(0, 140))}</small>
                     </td>
                     <td>
                       <button className="btn btn-sm btn-primary me-2" onClick={() => { setSelected(it); setShowModal(true); }}>

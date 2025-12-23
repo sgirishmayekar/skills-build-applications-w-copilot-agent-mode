@@ -163,8 +163,8 @@ class WorkoutSerializer(serializers.ModelSerializer):
 
     def get_id(self, obj):
         try:
-            if getattr(obj, 'id', None):
-                return str(obj.id)
+            if getattr(obj, 'pk', None):
+                return str(obj.pk)
         except Exception:
             pass
         try:
@@ -211,10 +211,13 @@ class LeaderboardSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_id', 'user_name', 'score', 'rank']
 
     def get_id(self, obj):
+        # Return a stringified PK only when present; avoid returning 'None' string
         try:
-            return str(obj.pk)
+            if getattr(obj, 'pk', None):
+                return str(obj.pk)
         except Exception:
-            return None
+            pass
+        return None
 
     def get_user_id(self, obj):
         try:
@@ -223,6 +226,8 @@ class LeaderboardSerializer(serializers.ModelSerializer):
         except Exception:
             pass
         try:
-            return str(obj.user.pk) if obj.user else None
+            if obj.user and getattr(obj.user, 'pk', None):
+                return str(obj.user.pk)
         except Exception:
-            return None
+            pass
+        return None
