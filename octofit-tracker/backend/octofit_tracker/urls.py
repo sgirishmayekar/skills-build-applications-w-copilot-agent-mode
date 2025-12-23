@@ -21,11 +21,15 @@ from django.shortcuts import redirect
 
 # DRF router will expose API endpoints under /api/
 from rest_framework import routers
-from .views import ActivityViewSet
+from .views import ActivityViewSet, UserViewSet, TeamViewSet, WorkoutViewSet, LeaderboardViewSet
 
 # register API routes
 router = routers.DefaultRouter()
 router.register(r'activities', ActivityViewSet, basename='activity')
+router.register(r'users', UserViewSet, basename='user')
+router.register(r'teams', TeamViewSet, basename='team')
+router.register(r'workouts', WorkoutViewSet, basename='workout')
+router.register(r'leaderboard', LeaderboardViewSet, basename='leaderboard')
 
 
 def api_root(request):
