@@ -46,10 +46,13 @@ class Workout(models.Model):
         return self.name
 
 class Leaderboard(models.Model):
+    id = models.ObjectIdField(primary_key=True, db_column='_id')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leaderboard_entries')
     score = models.IntegerField()
     rank = models.IntegerField()
+
     class Meta:
         db_table = 'leaderboard'
+
     def __str__(self):
         return f"{self.user.name} - Rank {self.rank}"
