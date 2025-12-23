@@ -15,9 +15,17 @@ Including another URLconf
 """
 import os
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.http import JsonResponse
 from django.shortcuts import redirect
+
+# DRF router will expose API endpoints under /api/
+from rest_framework import routers
+from .views import ActivityViewSet
+
+# register API routes
+router = routers.DefaultRouter()
+router.register(r'activities', ActivityViewSet, basename='activity')
 
 
 def api_root(request):
@@ -46,4 +54,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lambda request: redirect('api-root')),
     path('api/', api_root, name='api-root'),
+    # include DRF router endpoints under /api/
+    path('api/', include(router.urls)),
 ]
